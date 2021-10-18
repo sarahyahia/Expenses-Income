@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'expenses_site.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME',).replace('\n', '').replace('\r', ''),
-        'USER': os.environ.get('DB_USER',).replace('\n', '').replace('\r', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD',),
-        'HOST': os.environ.get('DB_HOST',).replace('\n', '').replace('\r', ''),
-        'PORT': os.environ.get('DB_PORT',),
+        'NAME': 'todos',
+        'USER': 'django',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
