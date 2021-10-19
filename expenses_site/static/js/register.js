@@ -33,7 +33,7 @@ usernameField.addEventListener('keyup',(e)=>{
                 usernameField.classList.add("is-valid");
                 submitBtn.removeAttribute("disabled");
             }
-        })
+        }).catch(error => {console.error(error);});
     }else{
         usernameSuccessOutput.style.display = 'none';
     }
