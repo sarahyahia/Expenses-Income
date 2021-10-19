@@ -18,7 +18,7 @@ usernameField.addEventListener('keyup',(e)=>{
         usernameSuccessOutput.textContent = `checking ${usernameValue}`;
 
         fetch("/auth/validate-username", {
-            body: JSON.stringify({ username: usernameValue }),
+            body: JSON.stringify({ 'username': usernameValue }),
             method: "POST",
         }).then((response) => response.json())
         .then((data) => {
