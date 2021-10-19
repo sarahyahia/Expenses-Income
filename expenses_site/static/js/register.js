@@ -20,6 +20,10 @@ usernameField.addEventListener('keyup',(e)=>{
         fetch("/auth/validate-username", {
             body: JSON.stringify({ username: usernameValue }),
             method: "POST",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         }).then((response) => response.json())
         .then((data) => {
             usernameSuccessOutput.style.display = 'none';
@@ -52,6 +56,10 @@ emailField.addEventListener('keyup',(e)=>{
         fetch("/auth/validate-email", {
             body: JSON.stringify({ email: emailValue }),
             method: "POST",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         }).then((response) => response.json())
         .then((data) => {
             emailSuccessOutput.style.display = 'none';

@@ -9,6 +9,7 @@ from validate_email import validate_email
 class UsernameValidationView(View):
     def post(self, request):
         data = json.loads(request.body)
+        print(data)
         username = data['username']
         if not str(username).isalpha():
             return JsonResponse({'username_error': 'username should only contain alphanumeric characters'}, status=400)
