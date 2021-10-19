@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'expenses_site.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todos',
+        'NAME': 'expenses',
         'USER': 'django',
         'PASSWORD': '123',
         'HOST': 'localhost',
