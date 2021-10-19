@@ -9,27 +9,21 @@ const submitBtn = document.querySelector(".submit-btn")
 
 usernameField.addEventListener('keyup',(e)=>{
     const usernameValue = e.target.value;
-    usernameSuccessOutput.style.display = 'block';
-    usernameSuccessOutput.textContent = `checking ${usernameValue}`;
-    {
-        (usernameValue.length)
-        ?(usernameSuccessOutput.textContent = `checking ${usernameValue}`)
-        :usernameSuccessOutput.style.display = 'none'
-    };
-
-
     usernameField.classList.remove("is-valid");
     usernameField.classList.remove("is-invalid");
     userFeedbackField.style.display = 'none';
-
-
+    
     if (usernameValue.length>0){
+        usernameSuccessOutput.style.display = 'block';
+        usernameSuccessOutput.textContent = `checking ${usernameValue}`;
+
         fetch("/auth/validate-username", {
             body: JSON.stringify({ username: usernameValue }),
             method: "POST",
         }).then((response) => response.json())
         .then((data) => {
             usernameSuccessOutput.style.display = 'none';
+
             if(data.username_error){
                 usernameField.classList.add("is-invalid");
                 userFeedbackField.style.display = 'block';
@@ -40,27 +34,28 @@ usernameField.addEventListener('keyup',(e)=>{
                 submitBtn.removeAttribute("disabled");
             }
         })
+    }else{
+        usernameSuccessOutput.style.display = 'none';
     }
 })
 
 emailField.addEventListener('keyup',(e)=>{
     let emailValue = e.target.value;
-    emailSuccessOutput.style.display = 'block';
-
-    {(emailValue.length)?(emailSuccessOutput.textContent = `checking ${emailValue}`): emailSuccessOutput.style.display = 'none'};
-
     emailField.classList.remove("is-invalid");
     emailField.classList.remove("is-valid");
     emailFeedbackField.style.display = 'none';
-
-
+    
     if (emailValue.length>0){
+        emailSuccessOutput.style.display = 'block';
+        emailSuccessOutput.textContent = `checking ${emailValue}`;
+
         fetch("/auth/validate-email", {
             body: JSON.stringify({ email: emailValue }),
             method: "POST",
         }).then((response) => response.json())
         .then((data) => {
             emailSuccessOutput.style.display = 'none';
+
             if(data.email_error){
                 emailField.classList.add("is-invalid");
                 emailFeedbackField.style.display = 'block';
@@ -71,5 +66,7 @@ emailField.addEventListener('keyup',(e)=>{
                 submitBtn.removeAttribute("disabled");
             }
         })
+    }else{
+        emailSuccessOutput.style.display = 'none';
     }
 })
