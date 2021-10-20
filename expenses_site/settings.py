@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os ,sys, platform
 import django_heroku
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY',)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+LOGIN_URL = '/auth/login'
 
 # Application definition
 
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'expenses',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -136,15 +141,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # EMAIL CONFIG  
-# EMAIL_FROM_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', '')
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', '')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD',).replace('\n', '').replace('\r', '')
-# EMAIL_PORT= 587
-# EMAIL_USE_TLS = True
+EMAIL_FROM_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', '')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD',).replace('\n', '').replace('\r', '')
+EMAIL_PORT= 587
+EMAIL_USE_TLS = True
 
 
 # Configure Django App for Heroku.
 
 django_heroku.settings(locals())
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}

@@ -6,6 +6,18 @@ const emailFeedbackField = document.querySelector('.email_invalid_feedback');
 const usernameSuccessOutput = document.querySelector(".usernameSuccessOutput");
 const emailSuccessOutput = document.querySelector(".emailSuccessOutput");
 const submitBtn = document.querySelector(".submit-btn")
+const showPassword = document.querySelector("#showPasswordField");
+
+
+
+const handleShowPassword =() =>{
+    (showPassword.checked)
+    ?passwordField.setAttribute("type","text")
+        :passwordField.setAttribute("type","password")
+    
+}
+
+showPassword.onclick = handleShowPassword;
 
 usernameField.addEventListener('keyup',(e)=>{
     const usernameValue = e.target.value;

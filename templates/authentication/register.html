@@ -13,6 +13,7 @@ Register
                 <h4 >Register for a free account</h4>
             </div>
             <div class="card-body">
+                {% include "_partials/messages.html" %}
                 <form action="{% url 'register' %}" method="post">
                     {% csrf_token %}
                     <div class="mb-3 mx-3 form-group">
@@ -21,7 +22,7 @@ Register
                         type="text"
                         name="username"
                         id="usernameField"
-                        {% comment %} value="{{fieldValues.username}}" {% endcomment %}
+                        value="{{data.username}}"
                         class="form-control"
                         />
                     </div>
@@ -30,7 +31,7 @@ Register
                     <p class="text-sm mx-3 text-success usernameSuccessOutput"></p>
                     <div class="mb-3 mx-3">
                         <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="emailField" >
+                        <input name="email" value="{{data.email}}" type="email" class="form-control" id="emailField" >
                         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
                     <div class="email_invalid_feedback invalid-feedback" style="display:none">
@@ -38,7 +39,7 @@ Register
                     <p class="text-sm mx-3 text-success emailSuccessOutput"></p>
                     <div class="mb-3 mx-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="passwordField">
+                        <input name="password" type="password" class="form-control" id="passwordField">
                     </div>
                     <div class="mb-3 mx-4 form-check">
                         <input type="checkbox" class="form-check-input showPasswordToggle" id="showPasswordField">

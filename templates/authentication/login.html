@@ -5,9 +5,43 @@
 Login
 {% endblock %}
 {% block content%}
-<div class="card">
-    <div class="card-body">
-        <h1>Login</h1>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="card mt-5">
+            <div class="card-header pt-5 text-center">
+                <h4 >Login</h4>
+            </div>
+            <div class="card-body">
+                {% include "_partials/messages.html" %}
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 mx-3 form-group">
+                        <label for="exampleInputUsername1" class="form-label">Username</label>
+                        <input
+                        type="text"
+                        name="username"
+                        value="{{data.username}}"
+                        class="form-control"
+                        required
+                        />
+                    </div>
+                    <div class="invalid_feedback invalid-feedback" style="display:none">
+                    </div>
+                    <p class="text-sm mx-3 text-success usernameSuccessOutput"></p>
+                    <div class="mb-5 mx-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input name="password" type="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mx-3">
+                        <button type="submit" class="btn btn-block btn-primary submit-btn">Login</button>
+                    </div>
+                    <div class="mx-3 mt-3 messages">Don't have an account? <a href={% url 'register'  %}>Register Now!</a></div>
+                </form>
+            </div>
+        </div>
     </div>
+    <div class="col-md-4"></div>
 </div>
 {% endblock %}
