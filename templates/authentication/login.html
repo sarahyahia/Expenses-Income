@@ -26,18 +26,16 @@ Login
                         required
                         />
                     </div>
-                    <div class="invalid_feedback invalid-feedback" style="display:none">
-                    </div>
-                    <p class="text-sm mx-3 text-success usernameSuccessOutput"></p>
                     <div class="mb-5 mx-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
                         <input name="password" type="password" class="form-control" required>
+                        <div class=" mt-2">Forgot your password? <a href={% url 'request-password' %}>Reset it</a></div>
                     </div>
                     
                     <div class="d-grid gap-2 mx-3">
                         <button type="submit" class="btn btn-block btn-primary submit-btn">Login</button>
                     </div>
-                    <div class="mx-3 mt-3 messages">Don't have an account? <a href={% url 'register'  %}>Register Now!</a></div>
+                    <div class="mx-3 mt-3">Don't have an account? <a href={% url 'register'  %}>Register Now!</a></div>
                 </form>
             </div>
         </div>

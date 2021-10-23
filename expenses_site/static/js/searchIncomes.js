@@ -1,4 +1,4 @@
-const searchField = document.querySelector('#searchField');
+const searchField = document.querySelector('.searchField');
 const paginationContainer = document.querySelector('.pagination-container');
 const tbody = document.querySelector('.t-body');
 const tableOutput = document.querySelector('.table-output');
@@ -16,7 +16,7 @@ searchField.addEventListener('keyup', (e) => {
         
         paginationContainer.style.display = 'none';
         tbody.innerHTML = "";
-        fetch("/search-expenses", {
+        fetch("/income/search-incomes", {
             body: JSON.stringify({ searchText: searchValue }),
             method: "POST",
             headers : { 
@@ -30,15 +30,14 @@ searchField.addEventListener('keyup', (e) => {
             if (data.length > 0) {
                 noResults.style.display = 'none';
                 data.map((item) => {
-                    console.log(item.id);
                     tbody.innerHTML+=`
                     <tr>
                     <td>${item.amount}</td>
-                    <td>${item.category}</td>
+                    <td>${item.source}</td>
                     <td>${item.description}</td>
                     <td>${item.date}</td>
                     <td>
-                        <a href="{% url 'edit-expense' ${item.id} %}" class="btn btn-secondary btn-sm">
+                        <a href="{% url 'edit-income' ${item.id} %}" class="btn btn-secondary btn-sm">
                             Edit
                         </a>
                     </td>

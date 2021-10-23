@@ -6,6 +6,8 @@ from userpreferences.models import UserPreference
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
+from django.utils.timezone import now
+
 
 
 
@@ -26,10 +28,14 @@ def search_expenses(request):
 @login_required(login_url="/auth/login")
 def index(request):
     expenses = Expense.objects.filter(owner=request.user)
-    paginator = Paginator(expenses, 2)
+    paginator = Paginator(expenses, 5)
     pg_number = request.GET.get('page')
     pg_object = Paginator.get_page(paginator,pg_number)
-    currency = UserPreference.objects.get(user= request.user).currency
+    try:
+        currency = UserPreference.objects.get(user= request.user).currency
+
+    except:
+        currency = None
     context ={
         'expenses': expenses,
         'currency': currency,
@@ -52,11 +58,19 @@ def add_expense(request):
         description = request.POST.get('description')
         category = request.POST.get('category')
         date = request.POST.get('expense_date')
+        if not date : date = now()
         owner = request.user
-        if not amount:
+        if not amount :
             messages.add_message(request, messages.ERROR,'Amount is required.')
+            return render(request,'expenses/add.html', context=context)
+            
+        if not isinstance(amount, (int, float)) :
+            messages.add_message(request, messages.ERROR,'Amount must be a number.')
+            return render(request,'expenses/add.html', context=context)
+            
         if not description:
             messages.add_message(request, messages.ERROR,'Description is required.')
+            return render(request,'expenses/add.html', context=context)
         expense = Expense.objects.create(
             amount=amount, 
             category=category,
@@ -87,6 +101,12 @@ def edit_expense(request,id):
         if not amount:
             messages.add_message(request, messages.ERROR,'Amount is required.')
             return render(request,'expenses/edit.html', context=context)
+            
+        if not isinstance(amount, (int, float)) :
+            messages.add_message(request, messages.ERROR,'Amount must be a number.')
+            return render(request,'expenses/edit.html', context=context)
+            
+        
         if not description:
             messages.add_message(request, messages.ERROR,'Description is required.')
             return render(request,'expenses/edit.html', context=context)

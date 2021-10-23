@@ -2,21 +2,21 @@
 
 {% load static %}
 {% block title %}
-Add Expenses
+Add Income
 {% endblock %}
 {% block content%}
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Add Expenses</li>
+            <li class="breadcrumb-item"><a href="{% url 'income' %}">Income</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Income</li>
         </ol>
     </nav>
 </div>
 <div class="card mx-4 mt-4">
-    <div class="card-header"><h2 class="pt-2 mx-3">Add Expenses</h2></div>
+    <div class="card-header"><h2 class="pt-2 mx-3">Add Income</h2></div>
     <div class="card-body">
-        <form action="{% url 'add-expense' %}" method="post">
+        <form action="{% url 'add-income' %}" method="post">
             {% include "_partials/messages.html" %}
             {% csrf_token %}
             <div class="mb-3">
@@ -24,11 +24,11 @@ Add Expenses
                 <input type="text" name="amount" value="{{values.amount}}" class="form-control form-control-sm">
             </div>
             <div class="mb-3">
-                <label class="form-label">Category</label>
-                <select class="form-select" name="category" aria-label="Default select example">
-                    <option selected>choose category...</option>
-                {% for category in categories %}
-                    <option name="category" value="{{ category.name }}">{{ category.name }}</option>
+                <label class="form-label">Source</label>
+                <select class="form-select" name="source" aria-label="Default select example">
+                    <option selected>choose source...</option>
+                {% for source in sources %}
+                    <option name="source" value="{{ source.name }}">{{ source.name }}</option>
                 {% endfor %}
                 </select>
             </div>
@@ -37,8 +37,8 @@ Add Expenses
                 <input type="text" value="{{values.description}}" name="description" class="form-control form-control-sm">
             </div>
             <div class="mb-3">
-                <label class="form-label">Expenses Date</label>
-                <input type="date" value="{{values.expense_date |date:'Y-m-d'}}" name="expense_date" class="form-control form-control-sm">
+                <label class="form-label">Incomes Date</label>
+                <input type="date" value="{{values.income_date |date:'Y-m-d'}}" name="income_date" class="form-control form-control-sm">
             </div>
             <button type="submit" class="btn btn-primary ">Submit</button>
         </form>

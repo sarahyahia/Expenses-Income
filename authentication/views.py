@@ -16,6 +16,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import threading
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 
@@ -141,7 +142,7 @@ def activate_user (request, uidb64, token):
         messages.add_message(request, messages.SUCCESS,'Email has been verified, you can now login')
         return redirect(reverse('login'))
     
-    messages.add_message(request, messages.SUCCESS,'expired link , do you want to resend another one')
+    messages.add_message(request, messages.Error,'expired link , do you want to resend another one')
     return redirect(reverse('login'))
 
 
@@ -151,3 +152,78 @@ class LogoutView(View):
         messages.add_message(request, messages.SUCCESS,'Logged out successfully')
         return redirect('login')
         
+
+
+
+################### send reset password mail ######################
+def send_reset_password_email(user, request):
+    current_site = get_current_site(request)
+    ######################### send mail with email template ####################################
+    htmly = get_template('authentication/resetEmail.html')
+    context = {
+        'user':user,
+        'domain':current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': PasswordResetTokenGenerator().make_token(user)
+    }
+    subject, from_email,to = 'Reset your password', settings.EMAIL_HOST_USER, user.email
+    html_content = htmly.render(context)
+    email = EmailMultiAlternatives(subject, html_content, from_email, [to])
+    email.attach_alternative(html_content, "text/html")
+
+    if not settings.TESTING:
+        EmailThread(email).start()
+
+        
+        
+class RequestPasswordResetEmailView(View):
+    def get(self, request):
+        return render(request, 'authentication/password_reset.html')
+    
+    def post(self, request):
+        email = request.POST.get('email')
+        if not validate_email(email):
+            messages.add_message(request, messages.ERROR,'Please, supply a valid email address.')
+            return render(request, 'authentication/password_reset.html', context={'values': request.POST})
+        
+        user = User.objects.filter(email=email)
+        if not user:
+            messages.add_message(request, messages.ERROR,"You don't have an account with this email address")
+            return render(request, 'authentication/password_reset.html', context={'values': request.POST})
+        send_reset_password_email(user[0],request)
+        messages.add_message(request, messages.SUCCESS,"We sent you a reset link , please check your inbox.")
+        return render(request, 'authentication/password_reset.html', context={'values': request.POST})
+
+
+
+class SetNewPassword(View):
+    def get(self,request, uidb64, token):
+        try:
+            uid= force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id = uid)
+            # import pdb ; pdb.set_trace()
+            
+            context = {'uidb64': uidb64, 'token': token}
+        except Exception as e:
+            user = None
+        if user and PasswordResetTokenGenerator().check_token(user,token): # check_token is for not using the link again after resetting once
+            
+            messages.add_message(request, messages.SUCCESS,'Now, You can set a new password.')
+            return render(request, 'authentication/set_newPassword.html', context)
+        else:
+            messages.add_message(request, messages.ERROR,'Something went  wrong. Please try again')
+            return redirect('request-password')
+        
+        
+    def post(self, request, uidb64, token):
+        uid= force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id = uid)
+        context = {'uidb64': uidb64, 'token': token}
+        password = request.POST.get('password')
+        if len(password) < 6:
+            messages.add_message(request, messages.ERROR,'Password should be at least 6 characters')
+            return render(request, 'authentication/set_newPassword.html', context)
+        user.set_password(password)
+        user.save()
+        messages.add_message(request, messages.SUCCESS,'password has been set successfully.')
+        return redirect('login')
