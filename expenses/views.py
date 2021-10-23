@@ -63,11 +63,7 @@ def add_expense(request):
         if not amount :
             messages.add_message(request, messages.ERROR,'Amount is required.')
             return render(request,'expenses/add.html', context=context)
-            
-        if not isinstance(amount, (int, float)) :
-            messages.add_message(request, messages.ERROR,'Amount must be a number.')
-            return render(request,'expenses/add.html', context=context)
-            
+        
         if not description:
             messages.add_message(request, messages.ERROR,'Description is required.')
             return render(request,'expenses/add.html', context=context)
@@ -101,11 +97,6 @@ def edit_expense(request,id):
         if not amount:
             messages.add_message(request, messages.ERROR,'Amount is required.')
             return render(request,'expenses/edit.html', context=context)
-            
-        if not isinstance(amount, (int, float)) :
-            messages.add_message(request, messages.ERROR,'Amount must be a number.')
-            return render(request,'expenses/edit.html', context=context)
-            
         
         if not description:
             messages.add_message(request, messages.ERROR,'Description is required.')
