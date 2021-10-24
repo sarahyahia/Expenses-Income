@@ -26,7 +26,11 @@ Expenses
     {% include "_partials/messages.html" %}
     {% if expenses.count %}
         <div class="row my-3">
-            <div class="col-md-8"></div>
+            <div class="col-md-8 justify-content-end d-flex">
+                <a href="{% url 'export-pdf'%}" class="mr-2 btn btn-primary">Export PDF</a>
+                <a href="{% url 'export-excel'%}" class="mx-2 btn btn-success">Export Excel</a>
+                <a href="{% url 'export-csv'%}" class="btn btn-secondary">Export CSV</a>
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <input type="text" class="form-control" id="searchField" placeholder="search...">

@@ -13,6 +13,9 @@ sqlparse = "==0.4.2"
 Django = "==3.2.8"
 validate-email = "*"
 six = "*"
+xlwt = "*"
+django-weasyprint = "*"
+weasyprint = "*"
 
 [dev-packages]
 
