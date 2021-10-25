@@ -8,6 +8,7 @@ import json
 from django.http import JsonResponse
 from django.utils.timezone import now
 import numbers
+import datetime
 
 
 
@@ -119,3 +120,36 @@ def delete_income(request,id):
     income.delete()
     messages.add_message(request, messages.SUCCESS, 'Income has been deleted.')
     return redirect('income')
+
+
+
+@login_required(login_url="/auth/login")
+def income_source_summary(request):
+    todays_date = datetime.date.today()
+    six_months_ago = todays_date - datetime.timedelta(days=180)
+    final_rep={}
+    incomes = Income.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
+    
+    def get_source(income):
+        return income.source
+    
+    source_list = list(set(map(get_source,incomes)))
+    
+    def get_income_source_amount(source):
+        amount=0
+        filtered_by_source = incomes.filter(source=source)
+        for item in filtered_by_source:
+            amount += item.amount
+            
+        return amount
+    
+
+    for y in source_list:
+        final_rep[y] = get_income_source_amount(y)
+
+    return JsonResponse({'income_source_data': final_rep}, safe=False)
+
+
+
+def stats_view(request):
+    return render(request, 'income/stats.html')

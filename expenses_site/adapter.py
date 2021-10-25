@@ -21,7 +21,7 @@ class MyLoginAccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
         """ 
         """
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return settings.LOGIN_REDIRECT_URL.format(
                 id=request.user.id)
         else:
@@ -38,18 +38,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
-    ''' Login and redirect
-    This is done in order to tackle the situation where user's email retrieved
-    from one provider is different from already existing email in the database
-    (e.g facebook and google both use same email-id). Specifically, this is done to
-    tackle following issues:
-    * https://github.com/pennersr/django-allauth/issues/215
 
-    '''
     email_address = sociallogin.account.extra_data['email']
     User = get_user_model()
-    # import pdb ; pdb.set_trace()
-    
     try:
         user = User.objects.get(email=sociallogin.user.email)
     except:
@@ -57,12 +48,7 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
         raise ImmediateHttpResponse(redirect(settings.LOGIN_URL))
     
     if user:
-        # allauth.account.app_settings.EmailVerificationMethod
-        try:
-            perform_login(request, user, email_verification='optional')
-        except:
-            pass
-        # perform_login(request, user, email_verification='optional')
+        perform_login(request, user, email_verification='optional')
         raise ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL.format(id=request.user.id)))
         
 
