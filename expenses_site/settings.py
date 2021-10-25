@@ -32,7 +32,7 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-LOGIN_URL = '/auth/login'
+
 
 # Application definition
 
@@ -43,10 +43,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites', 
+
     'expenses',
     'authentication',
     'userpreferences',
     'income',
+    
+    # django-allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google', # for Google OAuth 2.0
 ]
 
 MIDDLEWARE = [
@@ -79,6 +87,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'expenses_site.wsgi.application'
 
+
+# Authenication backends for allauth and admin
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -141,6 +155,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'expenses_site/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # EMAIL CONFIG  
 EMAIL_FROM_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', '')
@@ -150,6 +166,33 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_USER',).replace('\n', '').replace('\r', 
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD',).replace('\n', '').replace('\r', '')
 EMAIL_PORT= 587
 EMAIL_USE_TLS = True
+
+# allauth config
+SITE_ID = 2
+
+LOGIN_URL = '/auth/login'
+LOGIN_REDIRECT_URL ='/'
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET= True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = False
+
+ACCOUNT_ADAPTER = "expenses_site.adapter.MyLoginAccountAdapter"
+SOCIALACCOUNT_ADAPTER = 'expenses_site.adapter.MySocialAccountAdapter'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 
 # Configure Django App for Heroku.
